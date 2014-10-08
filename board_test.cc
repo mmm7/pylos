@@ -25,7 +25,7 @@ TEST(BoardStatic, Binary) {
   EXPECT_EQ(3, 0b11);
 }
 
-TEST(Board, FullUnder) {
+TEST(Board, FullUnder_Random) {
   Board b;
   for (int y = 0; y < 4; y++) {
     for (int x = 0; x < 4; x++) {
@@ -50,4 +50,26 @@ TEST(Board, FullUnder) {
   EXPECT_FALSE(b.FullUnder(Board::Pos(1,1,0)));
   EXPECT_FALSE(b.FullUnder(Board::Pos(1,1,1)));
   EXPECT_FALSE(b.FullUnder(Board::Pos(1,1,2)));
+
+  for (int y = 0; y < 4; y++) {
+    for (int x = 0; x < 4; x++) {
+      EXPECT_FALSE(b.FullUnder(Board::Pos(0, y, x)));
+    }
+  }
+}
+
+TEST(Board, FullUnder_Systematic) {
+  Board b;
+  for (int l = 1; l < 4; ++l) {
+    for (int y = 0; y < 4-l; y++) {
+      for (int x = 0; x < 4-l; x++) {
+        b.Move(Board::Pos(l-1, y, x), Board::BLACK);
+        b.Move(Board::Pos(l-1, y+1, x), Board::BLACK);
+        b.Move(Board::Pos(l-1, y, x+1), Board::BLACK);
+        b.Move(Board::Pos(l-1, y+1, x+1), Board::BLACK);
+        EXPECT_TRUE(b.FullUnder(Board::Pos(l, y, x)))
+          << l << ", " << y << ", " << x;
+      }
+    }
+  }
 }
