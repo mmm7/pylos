@@ -38,3 +38,14 @@ board_test.o: board_test.cc board.h
 
 board_test: board_test.o board.o $(GTEST)
 	$(LINK) -o $@ $^ $(LDFLAGS)
+
+################################################################################
+# generate
+################################################################################
+
+mask_generate_quartet.o: mask_generate_quartet.cc board.h
+	$(CXX) $(CCFLAGS) -c $< -o $@
+
+mask_generate_quartet: mask_generate_quartet.o board.o
+	$(LINK) -o $@ $^ $(LDFLAGS)
+
