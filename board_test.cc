@@ -7,6 +7,7 @@ TEST(BoardStatic, Pmap) {
     for (int y = 0; y < 4-l; y++) {
       for (int x = 0; x < 4-l; x++) {
         EXPECT_LE(0, Board::Pos(l, y, x));
+        EXPECT_GE(31, Board::Pos(l, y, x));
       }
     }
   }
@@ -21,6 +22,25 @@ TEST(BoardStatic, Binary) {
   EXPECT_EQ(3, 0b11);
 }
 
+TEST(Board, MoveGet) {
+  Board b;
+  EXPECT_EQ(Board::EMPTY, b.Get(Board::Pos(0,0,0)));
+  EXPECT_EQ(Board::EMPTY, b.Get(Board::Pos(1,0,0)));
+  EXPECT_EQ(Board::EMPTY, b.Get(Board::Pos(2,0,0)));
+  EXPECT_EQ(0L, b.Raw());
+  EXPECT_TRUE(b.ValidMovePos(Board::Pos(0,2,1)));
+  b.Move(Board::Pos(2,1,0), Board::BLACK);
+  b.Move(Board::Pos(1,1,0), Board::BLACK);
+  b.Move(Board::Pos(0,2,1), Board::WHITE);
+  EXPECT_EQ(Board::BLACK, b.Get(Board::Pos(2,1,0))) << b.Raw();
+  EXPECT_EQ(Board::BLACK, b.Get(Board::Pos(1,1,0))) << b.Raw();
+  EXPECT_EQ(Board::WHITE, b.Get(Board::Pos(0,2,1))) << b.Raw();
+  EXPECT_EQ(Board::EMPTY, b.Get(Board::Pos(0,0,0)));
+  EXPECT_EQ(Board::EMPTY, b.Get(Board::Pos(1,0,0)));
+  EXPECT_EQ(Board::EMPTY, b.Get(Board::Pos(2,0,0)));
+  EXPECT_FALSE(b.ValidMovePos(Board::Pos(0,2,1)));
+}
+
 TEST(Board, FullUnder_Random) {
   Board b;
   for (int y = 0; y < 4; y++) {
@@ -30,7 +50,7 @@ TEST(Board, FullUnder_Random) {
   }
   b.Move(Board::Pos(0,0,0), Board::WHITE);
   b.Move(Board::Pos(0,0,1), Board::WHITE);
-  b.Move(Board::Pos(0,0,2), Board::WHITE);
+  b.Move(Board::Pos(0,0,2), Board::BLACK);
   b.Move(Board::Pos(0,0,3), Board::WHITE);
   // (0,1,0) missing
   b.Move(Board::Pos(0,1,1), Board::BLACK);

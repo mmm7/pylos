@@ -2,8 +2,15 @@
 #define PYLOS_BOARD_H__
 
 #include <cstdlib>
+#include <iostream>
 
-#define ASSERT(x) do { if (!(x)) exit(7); } while(0)
+#define ASSERT(x) do { \
+  if (!(x)) { \
+    std::cout << "FAIL[" << __LINE__ << "]: " << #x << std::endl; \
+    exit(7); \
+  } \
+} while(0)
+
 //#define ASSERT(x) (void*)0;
 
 class Board {
@@ -12,7 +19,7 @@ class Board {
   inline bool Move(int pos, int mark) {
     ASSERT(mark > 0);
     ASSERT(mark < 0b100);
-    const int shifted_mark = mark << (pos * 2);
+    const unsigned long long shifted_mark = ((unsigned long long)mark) << (pos * 2);
     b |= shifted_mark;
   }
   static inline int Pos(int layer, int y, int x) {
@@ -24,6 +31,10 @@ class Board {
     ASSERT(y <= 4-layer);
     return pmap[layer][y][x];
   }
+  // Get the mark.
+  inline int Get(int pos) {
+    return (b >> (2 * pos)) & 0b11L;
+  }
   /*
    * Return true iff all four positions below pos are filled.
    * Returns true on bottom row.
@@ -34,9 +45,18 @@ class Board {
     const long long &mask = under_mask[pos];
     return ((b | b >> 1) & mask) == mask;
   }
+
+  inline bool ValidMovePos(int pos) {
+    return FullUnder(pos) && (Get(pos) == EMPTY);
+  }
   static const int EMPTY = 0;
   static const int WHITE = 1;
   static const int BLACK = 2;
+
+  // For testing.
+  unsigned long long Raw() const {
+    return b;
+  }
 
  private:
   unsigned long long b;
