@@ -24,20 +24,25 @@ class Board {
     ASSERT(y <= 4-layer);
     return pmap[layer][y][x];
   }
+  /*
+   * Return true iff all four positions below pos are filled.
+   * Returns true on bottom row.
+   */
   inline bool FullUnder(int pos) {
     ASSERT(pos >= 0);
     ASSERT(pos < 30);
     const long long &mask = under_mask[pos];
-    return (b & mask) == mask;
+    return ((b | b >> 1) & mask) == mask;
   }
   static const int EMPTY = 0;
   static const int WHITE = 1;
-  static const int BLACK = 3;
+  static const int BLACK = 2;
 
  private:
   unsigned long long b;
   static int pmap[4][4][4];
   static unsigned long long under_mask[30];
+  static unsigned long long quartet_mask[30][7];
 };
 
 #endif
