@@ -94,3 +94,56 @@ TEST(Board, FullUnder_Systematic) {
     }
   }
 }
+
+TEST(Board, NotBlocked) {
+  Board b;
+  b.Move(Board::Pos(0,0,0), Board::BLACK);
+  b.Move(Board::Pos(0,0,1), Board::BLACK);
+  b.Move(Board::Pos(0,1,0), Board::BLACK);
+  b.Move(Board::Pos(0,1,1), Board::BLACK);
+  b.Move(Board::Pos(0,2,0), Board::BLACK);
+  b.Move(Board::Pos(0,2,1), Board::BLACK);
+
+  EXPECT_TRUE(b.NotBlocked(Board::Pos(0,0,0)));
+  EXPECT_TRUE(b.NotBlocked(Board::Pos(0,0,1)));
+  EXPECT_TRUE(b.NotBlocked(Board::Pos(0,1,0)));
+  EXPECT_TRUE(b.NotBlocked(Board::Pos(0,1,1)));
+  EXPECT_TRUE(b.NotBlocked(Board::Pos(0,2,0)));
+  EXPECT_TRUE(b.NotBlocked(Board::Pos(0,2,1)));
+
+  b.Move(Board::Pos(1,2,0), Board::BLACK);
+
+  EXPECT_TRUE(b.NotBlocked(Board::Pos(0,0,0)));
+  EXPECT_TRUE(b.NotBlocked(Board::Pos(0,0,1)));
+  EXPECT_TRUE(b.NotBlocked(Board::Pos(0,1,0)));
+  EXPECT_TRUE(b.NotBlocked(Board::Pos(0,1,1)));
+  EXPECT_FALSE(b.NotBlocked(Board::Pos(0,2,0)));
+  EXPECT_FALSE(b.NotBlocked(Board::Pos(0,2,1)));
+
+  b.Move(Board::Pos(1,0,1), Board::BLACK);
+
+  EXPECT_TRUE(b.NotBlocked(Board::Pos(0,0,0)));
+  EXPECT_FALSE(b.NotBlocked(Board::Pos(0,0,1)));
+  EXPECT_TRUE(b.NotBlocked(Board::Pos(0,1,0)));
+  EXPECT_FALSE(b.NotBlocked(Board::Pos(0,1,1)));
+  EXPECT_FALSE(b.NotBlocked(Board::Pos(0,2,0)));
+  EXPECT_FALSE(b.NotBlocked(Board::Pos(0,2,1)));
+
+  b.Move(Board::Pos(1,1,0), Board::BLACK);
+
+  EXPECT_TRUE(b.NotBlocked(Board::Pos(0,0,0)));
+  EXPECT_FALSE(b.NotBlocked(Board::Pos(0,0,1)));
+  EXPECT_FALSE(b.NotBlocked(Board::Pos(0,1,0)));
+  EXPECT_FALSE(b.NotBlocked(Board::Pos(0,1,1)));
+  EXPECT_FALSE(b.NotBlocked(Board::Pos(0,2,0)));
+  EXPECT_FALSE(b.NotBlocked(Board::Pos(0,2,1)));
+
+  b.Move(Board::Pos(1,0,0), Board::BLACK);
+
+  EXPECT_FALSE(b.NotBlocked(Board::Pos(0,0,0)));
+  EXPECT_FALSE(b.NotBlocked(Board::Pos(0,0,1)));
+  EXPECT_FALSE(b.NotBlocked(Board::Pos(0,1,0)));
+  EXPECT_FALSE(b.NotBlocked(Board::Pos(0,1,1)));
+  EXPECT_FALSE(b.NotBlocked(Board::Pos(0,2,0)));
+  EXPECT_FALSE(b.NotBlocked(Board::Pos(0,2,1)));
+}

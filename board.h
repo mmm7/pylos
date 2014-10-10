@@ -32,22 +32,27 @@ class Board {
     return pmap[layer][y][x];
   }
   // Get the mark.
-  inline int Get(int pos) {
+  inline int Get(int pos) const {
     return (b >> (2 * pos)) & 0b11L;
   }
   /*
    * Return true iff all four positions below pos are filled.
    * Returns true on bottom row.
    */
-  inline bool FullUnder(int pos) {
+  inline bool FullUnder(int pos) const {
     ASSERT(pos >= 0);
     ASSERT(pos < 30);
     const long long &mask = under_mask[pos];
-    return ((b | b >> 1) & mask) == mask;
+    return ((b | (b >> 1)) & mask) == mask;
   }
-
-  inline bool ValidMovePos(int pos) {
-    return FullUnder(pos) && (Get(pos) == EMPTY);
+  inline bool NotBlocked(int pos) const {
+    return ((b | (b >> 1)) & over_mask[pos]) == 0L;
+  }
+  inline bool ValidMovePos(int pos) const {
+    return (Get(pos) == EMPTY) && FullUnder(pos);
+  }
+  inline bool ValidTakePos(int pos) const {
+    return (Get(pos) != EMPTY) && NotBlocked(pos);
   }
   static const int EMPTY = 0;
   static const int WHITE = 1;
