@@ -42,6 +42,7 @@ class Board {
   unsigned long long b;
   static int pmap[4][4][4];
   static unsigned long long under_mask[30];
+  static unsigned long long over_mask[30];
   static unsigned long long quartet_mask[30][7];
 };
 
